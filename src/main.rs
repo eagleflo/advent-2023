@@ -131,6 +131,46 @@ mod advent2023_02 {
 
         println!("02 - Part One: {}", sum);
     }
+
+    pub fn solve_part_two() {
+        let input = std::fs::read_to_string("02.txt").unwrap();
+        let mut sum = 0;
+
+        for line in input.lines() {
+            let (_, cubes) = line.split_once(": ").unwrap();
+            let mut red = 0;
+            let mut green = 0;
+            let mut blue = 0;
+
+            for c in cubes.split(&[',', ';']) {
+                let (numberstr, color) = c.trim().split_once(' ').unwrap();
+                let number = numberstr.parse::<u32>().unwrap();
+                match color {
+                    "red" => {
+                        if number > red {
+                            red = number
+                        }
+                    }
+                    "green" => {
+                        if number > green {
+                            green = number
+                        }
+                    }
+                    "blue" => {
+                        if number > blue {
+                            blue = number
+                        }
+                    }
+                    _ => (),
+                }
+            }
+
+            let power = red * green * blue;
+            sum += power;
+        }
+
+        println!("02 - Part Two: {}", sum);
+    }
 }
 
 fn main() {
@@ -138,4 +178,5 @@ fn main() {
     advent2023_01::solve_part_one();
     advent2023_01::solve_part_two();
     advent2023_02::solve_part_one();
+    advent2023_02::solve_part_two();
 }

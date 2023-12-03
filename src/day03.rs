@@ -21,9 +21,7 @@ impl PartNumber {
         let right = self.coord.col as isize + self.span as isize;
 
         if above >= 0 {
-            for x in
-                (self.coord.col as isize - 1)..(self.coord.col as isize + self.span as isize + 1)
-            {
+            for x in left..right + 1 {
                 if x >= 0 && x < width as isize {
                     coords.push(Coord {
                         row: above as usize,
@@ -48,9 +46,7 @@ impl PartNumber {
         }
 
         if below < height as isize {
-            for x in
-                (self.coord.col as isize - 1)..(self.coord.col as isize + self.span as isize + 1)
-            {
+            for x in left..right + 1 {
                 if x >= 0 && x < width as isize {
                     coords.push(Coord {
                         row: below as usize,

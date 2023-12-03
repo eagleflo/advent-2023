@@ -1,12 +1,10 @@
 use regex::Regex;
 
-#[derive(Debug)]
 struct Coord {
     row: usize,
     col: usize,
 }
 
-#[derive(Debug)]
 struct PartNumber {
     coord: Coord,
     span: usize,
@@ -70,12 +68,12 @@ pub fn solve_part_one() {
     let input = std::fs::read_to_string("03.txt").unwrap();
     let mut grid: Vec<Vec<char>> = vec![];
     let mut numbers: Vec<PartNumber> = vec![];
+    let digits_re = Regex::new(r"(\d+)+").unwrap();
     let width = input.find('\n').unwrap();
     let height = input.lines().count();
 
     for (index, line) in input.trim().lines().enumerate() {
         grid.push(line.chars().collect());
-        let digits_re = Regex::new(r"(\d+)+").unwrap();
         let matches: Vec<_> = digits_re.find_iter(line).collect();
         for m in matches {
             numbers.push(PartNumber {
@@ -99,4 +97,55 @@ pub fn solve_part_one() {
         .fold(0, |sum, n| sum + n.number);
 
     println!("03 - Part One: {}", sum);
+}
+
+pub fn solve_part_two() {
+    let input = std::fs::read_to_string("03.txt").unwrap();
+    let mut grid: Vec<Vec<char>> = vec![];
+    let mut numbers: Vec<PartNumber> = vec![];
+    let mut gears: Vec<Coord> = vec![];
+    let digits_re = Regex::new(r"(\d+)+").unwrap();
+    let gear_re = Regex::new(r"(\*)").unwrap();
+    let width = input.find('\n').unwrap();
+    let height = input.lines().count();
+
+    for (index, line) in input.trim().lines().enumerate() {
+        grid.push(line.chars().collect());
+        let matches: Vec<_> = digits_re.find_iter(line).collect();
+        for m in matches {
+            numbers.push(PartNumber {
+                coord: Coord {
+                    row: index,
+                    col: m.start(),
+                },
+                span: m.end() - m.start(),
+                number: m.as_str().parse().unwrap(),
+            })
+        }
+
+        let gear_matches: Vec<_> = gear_re.find_iter(line).collect();
+        for g in gear_matches {
+            gears.push(Coord {
+                row: index,
+                col: g.start(),
+            })
+        }
+    }
+
+    let mut sum = 0;
+    for gear in gears {
+        let connected: Vec<_> = numbers
+            .iter()
+            .filter(|n| {
+                n.perimeter(width, height)
+                    .iter()
+                    .any(|c| c.row == gear.row && c.col == gear.col)
+            })
+            .collect();
+        if connected.len() == 2 {
+            sum += connected[0].number * connected[1].number;
+        }
+    }
+
+    println!("03 - Part Two: {}", sum);
 }

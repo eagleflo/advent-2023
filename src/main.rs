@@ -9,4 +9,5 @@ fn main() {
     day02::solve_part_one();
     day02::solve_part_two();
     day03::solve_part_one();
+    day03::solve_part_two();
 }

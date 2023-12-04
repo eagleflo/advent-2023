@@ -13,11 +13,11 @@ pub fn solve_part_one() {
 
         let winning: HashSet<_> = whitespace_re
             .split(winning_str.trim())
-            .map(|w| w.parse::<u32>().unwrap())
+            .map(|w| w.parse::<u8>().unwrap())
             .collect();
         let numbers: HashSet<_> = whitespace_re
             .split(numbers_str.trim())
-            .map(|n| n.parse::<u32>().unwrap())
+            .map(|n| n.parse::<u8>().unwrap())
             .collect();
 
         for _ in numbers.intersection(&winning) {
@@ -32,4 +32,70 @@ pub fn solve_part_one() {
     }
 
     println!("04 - Part One: {}", sum);
+}
+
+#[derive(Clone, Debug)]
+struct Card {
+    id: u8,
+    winning: HashSet<u8>,
+    numbers: HashSet<u8>,
+}
+
+pub fn solve_part_two() {
+    let input = std::fs::read_to_string("04.txt").unwrap();
+    let number_re = Regex::new(r"(\d+)").unwrap();
+    let whitespace_re = Regex::new(r"\s+").unwrap();
+    let mut cards: Vec<Card> = vec![];
+
+    for line in input.lines() {
+        let (card_id_str, scratchcard) = line.split_once(": ").unwrap();
+        let card_id = number_re
+            .find(card_id_str)
+            .unwrap()
+            .as_str()
+            .parse::<u8>()
+            .unwrap();
+        let (winning_str, numbers_str) = scratchcard.split_once(" | ").unwrap();
+
+        let winning: HashSet<_> = whitespace_re
+            .split(winning_str.trim())
+            .map(|w| w.parse::<u8>().unwrap())
+            .collect();
+        let numbers: HashSet<_> = whitespace_re
+            .split(numbers_str.trim())
+            .map(|n| n.parse::<u8>().unwrap())
+            .collect();
+
+        cards.push(Card {
+            id: card_id,
+            winning,
+            numbers,
+        })
+    }
+
+    let mut cards_to_check: Vec<Card> = cards.clone();
+    let mut additional_cards: Vec<Card> = vec![];
+    loop {
+        for card in cards_to_check {
+            let win_count = card.numbers.intersection(&card.winning).count();
+            if win_count > 0 {
+                let pos = card.id as usize;
+                let new = &cards[pos..pos + win_count];
+                additional_cards.extend_from_slice(new);
+            } else {
+                continue;
+            }
+        }
+
+        if additional_cards.is_empty() {
+            break;
+        }
+
+        cards.extend_from_slice(&additional_cards);
+        cards_to_check = additional_cards.clone();
+        additional_cards.clear();
+    }
+
+    let sum = cards.len();
+    println!("04 - Part Two: {}", sum);
 }

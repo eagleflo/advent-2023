@@ -37,8 +37,7 @@ pub fn solve_part_one() {
 #[derive(Clone, Debug)]
 struct Card {
     id: u8,
-    winning: HashSet<u8>,
-    numbers: HashSet<u8>,
+    win_count: u8,
 }
 
 pub fn solve_part_two() {
@@ -66,10 +65,11 @@ pub fn solve_part_two() {
             .map(|n| n.parse::<u8>().unwrap())
             .collect();
 
+        let win_count = numbers.intersection(&winning).count() as u8;
+
         cards.push(Card {
             id: card_id,
-            winning,
-            numbers,
+            win_count,
         })
     }
 
@@ -77,10 +77,9 @@ pub fn solve_part_two() {
     let mut index = 0;
     loop {
         for card in &cards[index..] {
-            let win_count = card.numbers.intersection(&card.winning).count();
-            if win_count > 0 {
+            if card.win_count > 0 {
                 let pos = card.id as usize;
-                let new = &cards[pos..pos + win_count];
+                let new = &cards[pos..pos + card.win_count as usize];
                 additional_cards.extend_from_slice(new);
             }
             index += 1;

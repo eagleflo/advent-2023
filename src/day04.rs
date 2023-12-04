@@ -73,18 +73,17 @@ pub fn solve_part_two() {
         })
     }
 
-    let mut cards_to_check: Vec<Card> = cards.clone();
     let mut additional_cards: Vec<Card> = vec![];
+    let mut index = 0;
     loop {
-        for card in cards_to_check {
+        for card in &cards[index..] {
             let win_count = card.numbers.intersection(&card.winning).count();
             if win_count > 0 {
                 let pos = card.id as usize;
                 let new = &cards[pos..pos + win_count];
                 additional_cards.extend_from_slice(new);
-            } else {
-                continue;
             }
+            index += 1;
         }
 
         if additional_cards.is_empty() {
@@ -92,7 +91,6 @@ pub fn solve_part_two() {
         }
 
         cards.extend_from_slice(&additional_cards);
-        cards_to_check = additional_cards.clone();
         additional_cards.clear();
     }
 

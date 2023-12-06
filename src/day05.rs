@@ -1,3 +1,5 @@
+use rayon::prelude::*;
+
 fn parse_seeds(input: &str) -> Vec<u64> {
     let (_, number_str) = input.split_once(": ").unwrap();
     number_str
@@ -121,17 +123,21 @@ pub fn solve_part_two() {
 
     let mut min = std::u64::MAX;
     for range in seeds {
-        for seed in range {
-            let soil = maps[0].get(seed);
-            let fertilizer = maps[1].get(soil);
-            let water = maps[2].get(fertilizer);
-            let light = maps[3].get(water);
-            let temperature = maps[4].get(light);
-            let humidity = maps[5].get(temperature);
-            let location = maps[6].get(humidity);
-            if location < min {
-                min = location
-            }
+        let lowest = range
+            .into_par_iter()
+            .map(|seed| {
+                let soil = maps[0].get(seed);
+                let fertilizer = maps[1].get(soil);
+                let water = maps[2].get(fertilizer);
+                let light = maps[3].get(water);
+                let temperature = maps[4].get(light);
+                let humidity = maps[5].get(temperature);
+                maps[6].get(humidity) // Location
+            })
+            .min()
+            .unwrap();
+        if lowest < min {
+            min = lowest;
         }
     }
 

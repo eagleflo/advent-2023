@@ -22,7 +22,7 @@ impl Race {
 }
 
 pub fn solve_part_one() {
-    let input = std::fs::read_to_string("06.txt").unwrap();
+    let input = std::fs::read_to_string("input/06.txt").unwrap();
     let digits_re = Regex::new(r"(\d+)").unwrap();
     let times: Vec<u64> = digits_re
         .find_iter(input.lines().next().unwrap())
@@ -42,7 +42,7 @@ pub fn solve_part_one() {
 }
 
 pub fn solve_part_two() {
-    let input = std::fs::read_to_string("06.txt").unwrap();
+    let input = std::fs::read_to_string("input/06.txt").unwrap();
     let digits_re = Regex::new(r"(\d+)").unwrap();
     let time: u64 = digits_re
         .find_iter(input.lines().next().unwrap())

@@ -1,5 +1,5 @@
 pub fn solve_part_one() {
-    let input = std::fs::read_to_string("01.txt").unwrap();
+    let input = std::fs::read_to_string("input/01.txt").unwrap();
     let mut sum = 0;
 
     for line in input.lines() {
@@ -75,7 +75,7 @@ fn find_last(input: &str) -> Option<char> {
 }
 
 pub fn solve_part_two() {
-    let input = std::fs::read_to_string("01.txt").unwrap();
+    let input = std::fs::read_to_string("input/01.txt").unwrap();
     let mut sum = 0;
 
     for line in input.lines() {

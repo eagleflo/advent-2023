@@ -61,7 +61,7 @@ impl PartNumber {
 }
 
 pub fn solve_part_one() {
-    let input = std::fs::read_to_string("03.txt").unwrap();
+    let input = std::fs::read_to_string("input/03.txt").unwrap();
     let mut grid: Vec<Vec<char>> = vec![];
     let mut numbers: Vec<PartNumber> = vec![];
     let digits_re = Regex::new(r"(\d+)+").unwrap();
@@ -96,7 +96,7 @@ pub fn solve_part_one() {
 }
 
 pub fn solve_part_two() {
-    let input = std::fs::read_to_string("03.txt").unwrap();
+    let input = std::fs::read_to_string("input/03.txt").unwrap();
     let mut grid: Vec<Vec<char>> = vec![];
     let mut numbers: Vec<PartNumber> = vec![];
     let mut gears: Vec<Coord> = vec![];

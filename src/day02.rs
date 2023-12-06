@@ -1,5 +1,5 @@
 pub fn solve_part_one() {
-    let input = std::fs::read_to_string("02.txt").unwrap();
+    let input = std::fs::read_to_string("input/02.txt").unwrap();
     let mut sum = 0;
 
     for line in input.lines() {
@@ -39,7 +39,7 @@ pub fn solve_part_one() {
 }
 
 pub fn solve_part_two() {
-    let input = std::fs::read_to_string("02.txt").unwrap();
+    let input = std::fs::read_to_string("input/02.txt").unwrap();
     let mut sum = 0;
 
     for line in input.lines() {

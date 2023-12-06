@@ -2,7 +2,7 @@ use regex::Regex;
 use std::collections::HashSet;
 
 pub fn solve_part_one() {
-    let input = std::fs::read_to_string("04.txt").unwrap();
+    let input = std::fs::read_to_string("input/04.txt").unwrap();
     let whitespace_re = Regex::new(r"\s+").unwrap();
     let mut sum = 0;
 
@@ -41,7 +41,7 @@ struct Card {
 }
 
 pub fn solve_part_two() {
-    let input = std::fs::read_to_string("04.txt").unwrap();
+    let input = std::fs::read_to_string("input/04.txt").unwrap();
     let number_re = Regex::new(r"(\d+)").unwrap();
     let whitespace_re = Regex::new(r"\s+").unwrap();
     let mut cards: Vec<Card> = vec![];

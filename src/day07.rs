@@ -117,11 +117,7 @@ struct Hand {
 impl Hand {
     pub fn win(cards: &Vec<Card>) -> Win {
         let mut bins: HashMap<Rank, u8> = HashMap::new();
-        let mut number_of_jokers = 0;
         for card in cards {
-            if card.rank == Rank::Joker {
-                number_of_jokers += 1;
-            }
             if let Some(number) = bins.get_mut(&card.rank) {
                 *number += 1;
             } else {
@@ -129,54 +125,43 @@ impl Hand {
             }
         }
 
-        if number_of_jokers == 5 {
-            return Win::FiveOfAKind(Rank::Joker);
-        }
-
-        // Add the jokers to the largest non-joker bin. In the case of a tie,
-        // add to the highest ranking bin.
-        let max = bins
+        // Add the jokers to the largest, highest ranking bin
+        let number_of_jokers = bins.get(&Rank::Joker).unwrap_or(&0);
+        let (rank, highest) = bins
             .iter()
             .filter(|(r, _)| **r != Rank::Joker)
-            .max_by(|(_, x), (_, y)| x.cmp(y))
-            .unwrap();
-        let ties: Vec<_> = bins
-            .iter()
-            .filter(|(r, n)| **r != Rank::Joker && **n == *max.1)
-            .collect();
-        let best_bin = ties.iter().max_by(|(x, _), (y, _)| x.cmp(y)).unwrap();
-        let most = best_bin.0;
-        if let Some(number) = bins.get_mut(&most.clone()) {
-            *number += number_of_jokers;
+            .max_by_key(|bin| (bin.1, bin.0))
+            .unwrap_or((&Rank::Joker, number_of_jokers));
+        let mut num = *highest;
+        if rank != &Rank::Joker {
+            num += number_of_jokers;
         }
 
-        let (rank, num) = bins.iter().max_by(|(_, x), (_, y)| x.cmp(y)).unwrap();
-        if *num == 5 {
-            Win::FiveOfAKind(*rank)
-        } else if *num == 4 {
-            Win::FourOfAKind(*rank)
-        } else if *num == 3 {
-            if let Some((other_rank, _)) = bins
-                .iter()
-                .filter(|(r, _)| **r != Rank::Joker)
-                .find(|(_, n)| **n == 2)
-            {
-                Win::FullHouse(*rank, *other_rank)
-            } else {
-                Win::ThreeOfAKind(*rank)
+        match num {
+            5 => Win::FiveOfAKind(*rank),
+            4 => Win::FourOfAKind(*rank),
+            3 => {
+                if let Some((other_rank, _)) = bins
+                    .iter()
+                    .filter(|(r, _)| *r != rank && **r != Rank::Joker)
+                    .find(|(_, n)| **n == 2)
+                {
+                    Win::FullHouse(*rank, *other_rank)
+                } else {
+                    Win::ThreeOfAKind(*rank)
+                }
             }
-        } else if *num == 2 {
-            let pairs: Vec<_> = bins.iter().filter(|(_, n)| **n == 2).collect();
-            if pairs.len() == 2 {
-                let mut ranks: Vec<_> = pairs.iter().map(|(r, _)| r).collect();
-                ranks.sort();
-                Win::TwoPair(**ranks[1], **ranks[0])
-            } else {
-                Win::OnePair(*rank)
+            2 => {
+                let pairs: Vec<_> = bins.iter().filter(|(_, n)| **n == 2).collect();
+                if pairs.len() == 2 {
+                    let mut ranks: Vec<_> = pairs.iter().map(|(r, _)| r).collect();
+                    ranks.sort();
+                    Win::TwoPair(**ranks[1], **ranks[0])
+                } else {
+                    Win::OnePair(*rank)
+                }
             }
-        } else {
-            let high = cards.iter().max().unwrap();
-            Win::HighCard(high.rank)
+            _ => Win::HighCard(*rank),
         }
     }
 
@@ -234,7 +219,7 @@ pub fn solve_part_one() {
     for (index, hand) in hands.iter().enumerate() {
         total += (index as u32 + 1) * hand.bid;
     }
-    println!("06 - Part One: {}", total);
+    println!("07 - Part One: {}", total);
 }
 
 pub fn solve_part_two() {
@@ -249,7 +234,7 @@ pub fn solve_part_two() {
     for (index, hand) in hands.iter().enumerate() {
         total += (index as u32 + 1) * hand.bid;
     }
-    println!("06 - Part Two: {}", total);
+    println!("07 - Part Two: {}", total);
 }
 
 #[cfg(test)]

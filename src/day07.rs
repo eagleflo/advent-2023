@@ -168,8 +168,9 @@ impl Hand {
         } else if *num == 2 {
             let pairs: Vec<_> = bins.iter().filter(|(_, n)| **n == 2).collect();
             if pairs.len() == 2 {
-                let ranks: Vec<_> = pairs.iter().map(|(r, _)| r).collect();
-                Win::TwoPair(**ranks[0], **ranks[1])
+                let mut ranks: Vec<_> = pairs.iter().map(|(r, _)| r).collect();
+                ranks.sort();
+                Win::TwoPair(**ranks[1], **ranks[0])
             } else {
                 Win::OnePair(*rank)
             }
@@ -285,10 +286,7 @@ mod tests {
         assert_eq!(full_house.win, Win::FullHouse(Rank::Two, Rank::Three));
 
         let two_pairs = Hand::new("33577 123");
-        assert!(
-            two_pairs.win == Win::TwoPair(Rank::Three, Rank::Seven)
-                || two_pairs.win == Win::TwoPair(Rank::Seven, Rank::Three),
-        );
+        assert!(two_pairs.win == Win::TwoPair(Rank::Seven, Rank::Three));
 
         let one_pair = Hand::new("AA234 123");
         assert_eq!(one_pair.win, Win::OnePair(Rank::Ace));

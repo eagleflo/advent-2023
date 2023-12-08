@@ -24,4 +24,5 @@ fn main() {
     day07::solve_part_one();
     day07::solve_part_two();
     day08::solve_part_one();
+    day08::solve_part_two();
 }

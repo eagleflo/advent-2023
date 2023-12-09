@@ -6,7 +6,7 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
-// mod day09;
+mod day09;
 // mod day10;
 // mod day11;
 // mod day12;
@@ -42,7 +42,7 @@ fn main() {
     day07::solve_part_two();
     day08::solve_part_one();
     day08::solve_part_two();
-    // day09::solve_part_one();
+    day09::solve_part_one();
     // day09::solve_part_two();
     // day10::solve_part_one();
     // day10::solve_part_two();

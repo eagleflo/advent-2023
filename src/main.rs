@@ -43,7 +43,7 @@ fn main() {
     day08::solve_part_one();
     day08::solve_part_two();
     day09::solve_part_one();
-    // day09::solve_part_two();
+    day09::solve_part_two();
     // day10::solve_part_one();
     // day10::solve_part_two();
     // day11::solve_part_one();
